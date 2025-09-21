@@ -1,45 +1,32 @@
 #include "Maze.h"
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <tuple>
 #include <stack>
-#include <vector> // added
 
-int main() {
+int main(int argc, char* argv[]) {
+    // Expect exactly one argument: the input file name
+    if (argc != 2) {
+        std::cerr << "Usage: " << (argc > 0 ? argv[0] : "./a.out") << " <maze_file>\n";
+        return 1;
+    }
+    const std::string path = argv[1];
 
-    //Initialize the maze object to be used
     Maze maze;
-
-    // For now, use the hardcoded file path
-    const std::string path = "maze0-1_input.txt";
 
     if (!maze.loadFromFile(path)) {
         std::cerr << "Failed to load maze file: " << path << '\n';
         return 1;
     }
 
-    // Echo the parsed maze to verify input
-    maze.printRaw();
-
-    // Detect the Entrances and store them
     if (!maze.detectEntrances()) {
         std::cerr << "Failed to detect exactly two entrances.\n";
         return 1;
     }
 
-    // Echo the stored entrance and exit for debugging purposes.
-    std::cout << "Start: " << maze.startCell().r << ',' << maze.startCell().c << '\n';
-    std::cout << "Goal: " << maze.goalCell().r << ',' << maze.goalCell().c << '\n';
-
-    // Attempt to solve and print the path
     std::stack<Maze::Cell> pathStack;
     if (maze.solve(pathStack)) {
-        std::cout << "Solution found! Steps: " << pathStack.size() << '\n';
-
-        // Visualize the solution directly on the maze
+        // Print the maze with the solution path overlaid
         maze.printSolution(pathStack);
-
     } else {
         std::cout << "No solution found.\n";
     }
