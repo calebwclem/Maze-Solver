@@ -37,19 +37,9 @@ int main() {
     if (maze.solve(pathStack)) {
         std::cout << "Solution found! Steps: " << pathStack.size() << '\n';
 
-        // Convert stack (bottom=start, top=goal) into a start->goal sequence
-        std::vector<Maze::Cell> seq;
-        seq.reserve(pathStack.size());
-        while (!pathStack.empty()) {
-            seq.push_back(pathStack.top());
-            pathStack.pop();
-        }
-        std::reverse(seq.begin(), seq.end());
+        // Visualize the solution directly on the maze
+        maze.printSolution(pathStack);
 
-        std::cout << "Path (r,c):\n";
-        for (const auto& cell : seq) {
-            std::cout << '(' << cell.r << ',' << cell.c << ")\n";
-        }
     } else {
         std::cout << "No solution found.\n";
     }

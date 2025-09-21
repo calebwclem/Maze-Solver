@@ -33,6 +33,10 @@ public:
     [[nodiscard]] Cell startCell() const {return start;}
     [[nodiscard]] Cell goalCell() const {return goal;}
 
+    // Print the maze with the solution path overlaid.
+    // Cells in 'path' are printed as a red '*', others as original '0' or '1'.
+    void printSolution(const std::stack<Cell>& path) const;
+
     //Number of rows/cols accessors
     [[nodiscard]] int rows() const { return static_cast<int>(grid.size()); }
     [[nodiscard]] int cols() const { return grid.empty() ? 0 : static_cast<int>(grid[0].size()); }
@@ -44,8 +48,8 @@ private:
     Cell goal{-1,-1};
 
     // Helpers to keep solve clean and modular
-    bool inBounds(int r, int c) const;
-    bool isOpen(int r, int c) const;
+    [[nodiscard]] bool inBounds(int r, int c) const;
+    [[nodiscard]] bool isOpen(int r, int c) const;
     // Depth-First Search: explores in order of ~ Right, Down, Up, Left.
     // Pushes cells onto 'path' on entry; pops on backtrack.
     bool dfs(int r, int c, std::stack<Cell>& path, std::vector<std::vector<bool>>& visited);

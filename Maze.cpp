@@ -1,7 +1,3 @@
-//
-// Created by Caleb Clements on 9/13/25.
-//
-
 #include "Maze.h"
 #include<iostream>
 #include <fstream>
@@ -28,7 +24,8 @@ bool Maze::dfs(int r, int c, std::stack<Cell>& path, std::vector<std::vector<boo
         return true; // found goal
     }
 
-    // Explore neighbors in the requested order
+    // Explore neighbors in desired order
+    // I chose Right, Down, Up, Left.
     const int dr[4] = { 0,  1, -1,  0};
     const int dc[4] = { 1,  0,  0, -1};
 
@@ -41,13 +38,14 @@ bool Maze::dfs(int r, int c, std::stack<Cell>& path, std::vector<std::vector<boo
             }
         }
     }
-
     // backtrack if no neighbor leads to goal
     path.pop();
     return false;
 }
 
-
+//Solver method that utilizes DFS function using algorithm described
+//in the assignment. Accepts a pointer to a stack of Cells to be used as the
+//solution path if there is one.
 bool Maze::solve(std::stack<Cell>& path) {
 
     const int R = rows();
@@ -62,35 +60,36 @@ bool Maze::solve(std::stack<Cell>& path) {
     return dfs(start.r, start.c, path, visited);
 }
 
-    //If grid empty or start/goal cell not found, return false
-   /* if (grid.empty())
-        return false;
-    if (start.r == -1 || start.c == -1 || goal.r == -1 || goal.c == -1)
-        return false;
+// Print maze overlaying the solution path with red '*'
+// Assumes 'path' only contains valid cells within the maze.
+void Maze::printSolution(const std::stack<Cell>& path) const {
+    const int R = rows();
+    const int C = cols();
 
-    //Push the start cell onto the stack
-    path.push(startCell());
-
-    while (!path.empty()) {
-        //If the top cell has no unexplored adjacent cell, pop.
-        Cell cur = path.top();
-        //Otherwise, choose one unexplored adjacent cell
-
-        //Push that cell onto the stack
-
-        //Mark it as explored
-
-        //If cell is target, exit loop
+    // Build a mask of path cells (copy the stack to iterate without modifying caller)
+    std::vector<std::vector<bool>> onPath(R, std::vector<bool>(C, false));
+    std::stack<Cell> copy = path;
+    while (!copy.empty()) {
+        Cell p = copy.top();
+        copy.pop();
+        onPath[p.r][p.c] = true; // no defensive bounds checks by design
     }
 
-    //If the stack is empty, then no path exists from the start to the target
+    // ANSI escape sequences for red and reset
+    constexpr const char* RED = "\x1b[31m";
+    constexpr const char* RESET = "\x1b[0m";
 
-
-    //Otherwise, the stack now contains the path in reverse order
-
-
-    return false;
-}*/
+    for (int r = 0; r < R; ++r) {
+        for (int c = 0; c < C; ++c) {
+            if (onPath[r][c]) {
+                std::cout << RED << '*' << RESET;
+            } else {
+                std::cout << (grid[r][c] ? '1' : '0');
+            }
+        }
+        std::cout << '\n';
+    }
+}
 
 
 bool Maze::loadFromFile(const std::string& path) {
