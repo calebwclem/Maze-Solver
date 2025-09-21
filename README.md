@@ -50,3 +50,13 @@ Used the following sources to help me with this project:
 
 ## Testing & Status
 The program is currently working as intended.
+
+## TO RUN PROJECT:
+- download the project
+- unzip Maze_Backtracking.zip
+- cd Maze_Backtracking
+-  g++ -std=c++20 *.cpp
+- ./a.out name-of-an-input-file
+
+NOTE: The input file must be a rectangular grid of 0's and 1's.
+        These represent walls and path cells within a maze for us to solve.
